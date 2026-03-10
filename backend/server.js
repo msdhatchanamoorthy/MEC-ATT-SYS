@@ -14,16 +14,18 @@ connectDB();
 const app = express();
 const server = http.createServer(app);
 
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', process.env.FRONTEND_URL].filter(Boolean);
+
 // Socket.IO setup
 const io = new Server(server, {
     cors: {
-        origin: ['http://localhost:3000', 'http://localhost:3001'],
+        origin: allowedOrigins,
         methods: ['GET', 'POST'],
     },
 });
 
 // Middleware
-app.use(cors({ origin: ['http://localhost:3000', 'http://localhost:3001'], credentials: true }));
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 if (process.env.NODE_ENV === 'development') {
